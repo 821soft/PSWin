@@ -211,10 +211,10 @@ namespace PSWin
                         _st_WinPosData wpd_rec = new _st_WinPosData();
                         wpd_rec.whnd = w;
                         wpd_rec.dwstyle = _wi.dwStyle;
-                        wpd_rec.x = _wi.rcWindow.left + (int)_wi.cxWindowBorders;
-                        wpd_rec.y = _wi.rcWindow.top + (int)_wi.cyWindowBorders;
-                        wpd_rec.cx = _wi.rcWindow.right - _wi.rcWindow.left - ((int)_wi.cxWindowBorders*2);
-                        wpd_rec.cy = _wi.rcWindow.bottom - _wi.rcWindow.top - ((int)_wi.cyWindowBorders*2); ;
+                        wpd_rec.x = _wi.rcWindow.left;// + (int)_wi.cxWindowBorders;
+                        wpd_rec.y = _wi.rcWindow.top;// + (int)_wi.cyWindowBorders;
+                        wpd_rec.cx = _wi.rcWindow.right - _wi.rcWindow.left;// - ((int)_wi.cxWindowBorders*2);
+                        wpd_rec.cy = _wi.rcWindow.bottom - _wi.rcWindow.top;// - ((int)_wi.cyWindowBorders*2); ;
                         wpd_rec.bx = (int)_wi.cxWindowBorders ;
                         wpd_rec.by = (int)_wi.cyWindowBorders;
                         int l = WinApi.GetWindowTextLength(w);
@@ -239,13 +239,16 @@ namespace PSWin
 
             return (IntPtr.Zero);
         }
-        public static Boolean _MoveWindows(string title,int x ,int y,int w,int h)
+        /*
+         * (-11, 0)-(1197, 752) 1208x752
+         */
+        public static Boolean _MoveWindows(string title,int x ,int y,int w,int h,int bx,int by)
         {
             IntPtr hwnd = IntPtr.Zero;
             bool ret = false;
 
             hwnd = _FindWindow(null,title);
-            ret = MoveWindow(hwnd, x-8, y-8, w+16, h+16,true);
+            ret = MoveWindow(hwnd, x, y, w, h,true);
             return (ret);
         }
         

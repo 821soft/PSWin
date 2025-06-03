@@ -32,7 +32,7 @@ namespace PSWin
                 lbc.BackColor = Color.White;
             }
             System.Windows.Forms.Label lb = (System.Windows.Forms.Label)sender;
-            lb.BackColor=Color.Yellow;
+            lb.BackColor = Color.Yellow;
             int i = (int)lb.Tag;
             int x = WinApi._wpd[i].x;
             int y = WinApi._wpd[i].y;
@@ -56,15 +56,6 @@ namespace PSWin
                 // 変化あり
                 WinApi._WinPosData_store();
                 panel1.Controls.Clear();
-                Mnu_Windows.Items.Clear();
-                Mnu_Windows.SelectedIndex = -1;
-
-                for (int i = 1; i < WinApi._wpd.Count; i++)
-                {
-                    WinApi._st_WinPosData item = WinApi._wpd[i];
-                    Mnu_Windows.Items.Add($"{i} {item.dwstyle:x8} {item.title}");
-                }
-
             }
 
             var cnt = WinApi._wpd.Count() - 1;
@@ -75,8 +66,8 @@ namespace PSWin
                 System.Windows.Forms.Label lb = new System.Windows.Forms.Label();
                 lb.Text = $"{i} {item.title}";
                 lb.AutoSize = false;
-                lb.Location = new Point( (item.x ) / Scale, (item.y ) / Scale);
-                lb.Size = new Size( ( item.cx ) / Scale, ( item.cy ) / Scale);
+                lb.Location = new Point((item.x + item.bx) / Scale, (item.y + item.by) / Scale);
+                lb.Size = new Size((item.cx - (item.bx)) / Scale, (item.cy - (item.by)) / Scale);
                 lb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
                 lb.BackColor = Color.White;
                 lb.Tag = i;
@@ -85,13 +76,6 @@ namespace PSWin
                 lb.Click += Lb_Click;
                 panel1.Controls.Add(lb);
                 lb.BringToFront();
-            }
-            for (int i = 0; i < Mnu_Windows.Items.Count; i++)
-            {
-                if (SelectedWin == WinApi._wpd[i].whnd)
-                {
-                    Mnu_Windows.SelectedIndex = i;
-                }
             }
         }
 
@@ -137,7 +121,14 @@ namespace PSWin
 
         private void Mnu_Save_Click(object sender, EventArgs e)
         {
-            Debug.Print("Save");
+            var ret = saveFileDialog1.ShowDialog(this);
+            if ( ret != DialogResult.OK)
+            {
+                return;
+            }
+            string path = saveFileDialog1.FileName;
+
+            Debug.Print($"Save {path}");
             for (int i = 1; i < WinApi._wpd.Count; i++)
             {
                 WinApi._st_WinPosData item = WinApi._wpd[i];
@@ -148,7 +139,7 @@ namespace PSWin
             Encoding enc = Encoding.GetEncoding("UTF-8");
 
             // ファイルを開く
-            StreamWriter writer = new StreamWriter(@"PSWin.dat", false, enc);
+            StreamWriter writer = new StreamWriter(path, false, enc);
 
             for (int i = 1; i < WinApi._wpd.Count; i++)
             {
@@ -162,7 +153,13 @@ namespace PSWin
 
         private void Mnu_Load_Click(object sender, EventArgs e)
         {
-            string path = @"PSWin.dat";
+            var res = openFileDialog1.ShowDialog(this);
+            if (res != DialogResult.OK)
+            {
+                return;
+            }
+            string path = openFileDialog1.FileName;
+            Debug.Print($"Load {path}");
 
             // ファイルを開く＆文字化け防止
             StreamReader file = new StreamReader(path, Encoding.GetEncoding("UTF-8"));
@@ -171,7 +168,6 @@ namespace PSWin
                 Console.WriteLine("ファイルを開けませんでした。");
                 return;
             }
-            Debug.Print("Load");
 
             // 行末まで１行ずつ読み込む
             while (file.Peek() != -1)
@@ -184,12 +180,16 @@ namespace PSWin
                     int y = int.Parse(dat[4]);
                     int w = int.Parse(dat[5]);
                     int h = int.Parse(dat[6]);
-                    var ret = WinApi._MoveWindows(dat[2], x, y, w, h);
+                    int bx = int.Parse(dat[7]);
+                    int by = int.Parse(dat[8]);
+                    var ret = WinApi._MoveWindows(dat[2], x, y, w, h, bx, by);
+                    Debug.Print($"{ret} {dat[2]}");
 
                 }
             }
 
             file.Close();
+            PSWin_Shown(sender, e);
 
         }
 
@@ -197,5 +197,6 @@ namespace PSWin
         {
             PSWin_Shown(sender, e);
         }
+
     }
 }
