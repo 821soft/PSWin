@@ -16,6 +16,33 @@ namespace PSWin
         }
         private int Scale = 5;
         private IntPtr SelectedWin = 0;
+
+
+        private void Lb_MouseLeave(object? sender, EventArgs e)
+        {
+        }
+
+        private void Lb_MouseHover(object? sender, EventArgs e)
+        {
+        }
+        private void Lb_Click(object? sender, EventArgs e)
+        {
+            foreach (System.Windows.Forms.Label lbc in panel1.Controls)
+            {
+                lbc.BackColor = Color.White;
+            }
+            System.Windows.Forms.Label lb = (System.Windows.Forms.Label)sender;
+            lb.BackColor=Color.Yellow;
+            int i = (int)lb.Tag;
+            int x = WinApi._wpd[i].x;
+            int y = WinApi._wpd[i].y;
+            int w = WinApi._wpd[i].cx;
+            int h = WinApi._wpd[i].cy;
+            toolStripTextBox1.Text = $"{x}";
+            toolStripTextBox2.Text = $"{y}";
+            toolStripTextBox3.Text = $"{w}";
+            toolStripTextBox4.Text = $"{h}";
+        }
         private void DrawLayout()
         {
             WinApi._WinPosData();
@@ -48,12 +75,14 @@ namespace PSWin
                 System.Windows.Forms.Label lb = new System.Windows.Forms.Label();
                 lb.Text = $"{i} {item.title}";
                 lb.AutoSize = false;
-                lb.Location = new Point(item.x / Scale, item.y / Scale);
-                lb.Size = new Size(item.cx / Scale, item.cy / Scale);
+                lb.Location = new Point( (item.x ) / Scale, (item.y ) / Scale);
+                lb.Size = new Size( ( item.cx ) / Scale, ( item.cy ) / Scale);
                 lb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
                 lb.BackColor = Color.White;
                 lb.Tag = i;
-
+                lb.MouseHover += Lb_MouseHover;
+                lb.MouseLeave += Lb_MouseLeave;
+                lb.Click += Lb_Click;
                 panel1.Controls.Add(lb);
                 lb.BringToFront();
             }
@@ -65,6 +94,7 @@ namespace PSWin
                 }
             }
         }
+
 
         private void PSWin_Shown(object sender, EventArgs e)
         {
@@ -111,7 +141,7 @@ namespace PSWin
             for (int i = 1; i < WinApi._wpd.Count; i++)
             {
                 WinApi._st_WinPosData item = WinApi._wpd[i];
-                Debug.Print($"{i},{item.dwstyle:x8},{item.title},{item.x},{item.y},{item.cx},{item.cy}");
+                Debug.Print($"{i},{item.dwstyle:x8},{item.title},{item.x},{item.y},{item.cx},{item.cy},{item.bx},{item.by}");
             }
 
             // 文字コードを指定
@@ -124,7 +154,7 @@ namespace PSWin
             {
                 WinApi._st_WinPosData item = WinApi._wpd[i];
                 // テキストを書き込む
-                writer.WriteLine($"{i},{item.dwstyle:x8},{item.title},{item.x},{item.y},{item.cx},{item.cy}");
+                writer.WriteLine($"{i}\t{item.dwstyle:x8}\t{item.title}\t{item.x}\t{item.y}\t{item.cx}\t{item.cy}\t{item.bx}\t{item.by}");
             }
             // ファイルを閉じる
             writer.Close();
@@ -147,21 +177,25 @@ namespace PSWin
             while (file.Peek() != -1)
             {
                 var str = file.ReadLine();
-                string[] dat = str.Split(',');
+                string[] dat = str.Split('\t');
                 if (dat.Length > 0)
                 {
-                    string rec = "";
+                    int x = int.Parse(dat[3]);
+                    int y = int.Parse(dat[4]);
+                    int w = int.Parse(dat[5]);
+                    int h = int.Parse(dat[6]);
+                    var ret = WinApi._MoveWindows(dat[2], x, y, w, h);
 
-                    for (int i = 0; i < dat.Length; i++)
-                    { 
-                        rec += $"{dat[i]} ";
-                    }
-                    Debug.Print(rec);
                 }
             }
 
             file.Close();
 
+        }
+
+        private void PSWin_Activated(object sender, EventArgs e)
+        {
+            PSWin_Shown(sender, e);
         }
     }
 }

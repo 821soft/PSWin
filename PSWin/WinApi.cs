@@ -104,6 +104,8 @@ namespace PSWin
             public int y;
             public int cx;
             public int cy;
+            public int bx;
+            public int by;
         }
 
         [DllImport("user32.dll")]
@@ -111,6 +113,9 @@ namespace PSWin
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int GetWindowTextLength(IntPtr hWnd);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool MoveWindow(IntPtr hWnd,int x,int y,int nWidth,int nHeight, bool bRepaint);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -206,11 +211,12 @@ namespace PSWin
                         _st_WinPosData wpd_rec = new _st_WinPosData();
                         wpd_rec.whnd = w;
                         wpd_rec.dwstyle = _wi.dwStyle;
-                        wpd_rec.x = _wi.rcClient.left;
-                        wpd_rec.y = _wi.rcClient.top;
-                        wpd_rec.cx = _wi.rcClient.right - _wi.rcClient.left;
-                        wpd_rec.cy = _wi.rcClient.bottom - _wi.rcClient.top;
-
+                        wpd_rec.x = _wi.rcWindow.left + (int)_wi.cxWindowBorders;
+                        wpd_rec.y = _wi.rcWindow.top + (int)_wi.cyWindowBorders;
+                        wpd_rec.cx = _wi.rcWindow.right - _wi.rcWindow.left - ((int)_wi.cxWindowBorders*2);
+                        wpd_rec.cy = _wi.rcWindow.bottom - _wi.rcWindow.top - ((int)_wi.cyWindowBorders*2); ;
+                        wpd_rec.bx = (int)_wi.cxWindowBorders ;
+                        wpd_rec.by = (int)_wi.cyWindowBorders;
                         int l = WinApi.GetWindowTextLength(w);
                         StringBuilder tsb = new StringBuilder(l + 1);
                         WinApi.GetWindowText(w, tsb, tsb.Capacity);
@@ -232,6 +238,15 @@ namespace PSWin
             }
 
             return (IntPtr.Zero);
+        }
+        public static Boolean _MoveWindows(string title,int x ,int y,int w,int h)
+        {
+            IntPtr hwnd = IntPtr.Zero;
+            bool ret = false;
+
+            hwnd = _FindWindow(null,title);
+            ret = MoveWindow(hwnd, x-8, y-8, w+16, h+16,true);
+            return (ret);
         }
         
     }
