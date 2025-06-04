@@ -133,6 +133,11 @@ namespace PSWin
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
 
+        [DllImport("User32.dll")]
+        static extern IntPtr GetDC(IntPtr hwnd);
+        [DllImport("User32.dll")]
+        static extern void ReleaseDC(IntPtr hwnd, IntPtr dc);
+
 
         public static List<_st_WinPosData> _wpd = new List<_st_WinPosData>();
         public static List<_st_WinPosData> _wpd_stor = new List<_st_WinPosData>();
@@ -253,8 +258,17 @@ namespace PSWin
             ret = MoveWindow(hwnd, x, y, w, h,true);
             return (ret);
         }
-        
+        public static Boolean _DrawRect(RECT rect)
+        {
+
+            IntPtr desktopDC = GetDC(IntPtr.Zero);
+            return (false);
+        }
+
+
     }
+
+
     public delegate bool EnumWindowsDelegate(IntPtr hWnd, IntPtr lparam);
 
 
