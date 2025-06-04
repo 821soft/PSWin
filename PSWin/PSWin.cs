@@ -18,13 +18,13 @@ namespace PSWin
         private IntPtr SelectedWin = 0;
 
 
+        private void Lb_MouseHover(object? sender, EventArgs e)
+        {
+        }
         private void Lb_MouseLeave(object? sender, EventArgs e)
         {
         }
 
-        private void Lb_MouseHover(object? sender, EventArgs e)
-        {
-        }
         private void Lb_Click(object? sender, EventArgs e)
         {
             foreach (System.Windows.Forms.Label lbc in panel1.Controls)
@@ -75,7 +75,16 @@ namespace PSWin
                 lb.MouseLeave += Lb_MouseLeave;
                 lb.Click += Lb_Click;
                 panel1.Controls.Add(lb);
+                string tip = $"HWND:0x{item.whnd:X8}\n";
+                tip += $"rcWindow({item._wi.rcWindow.left},{item._wi.rcWindow.top})-({item._wi.rcWindow.right},{item._wi.rcWindow.bottom})\n";
+                tip += $"rcClient({item._wi.rcClient.left},{item._wi.rcClient.top})-({item._wi.rcClient.right},{item._wi.rcClient.bottom})\n";
+                tip += $"dwStyle:0x{item._wi.dwStyle:X8}\n";
+                tip += $"dwExStyle:0x{item._wi.dwExStyle:X8}\n";
+                tip += $"dwWindowStatus:0x{item._wi.dwWindowStatus:X8}\n";
+                tip += $"WindowBorders:({item._wi.cxWindowBorders},{item._wi.cyWindowBorders})\n";
+                TTP_tip1.SetToolTip(lb, tip);
                 lb.BringToFront();
+
             }
         }
 
@@ -122,7 +131,7 @@ namespace PSWin
         private void Mnu_Save_Click(object sender, EventArgs e)
         {
             var ret = saveFileDialog1.ShowDialog(this);
-            if ( ret != DialogResult.OK)
+            if (ret != DialogResult.OK)
             {
                 return;
             }
@@ -197,6 +206,5 @@ namespace PSWin
         {
             PSWin_Shown(sender, e);
         }
-
     }
 }

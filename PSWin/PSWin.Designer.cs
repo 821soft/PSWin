@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             MnuBar1 = new MenuStrip();
             Mnu_File = new ToolStripMenuItem();
             Mnu_Save = new ToolStripMenuItem();
@@ -45,6 +46,7 @@
             panel1 = new Panel();
             saveFileDialog1 = new SaveFileDialog();
             openFileDialog1 = new OpenFileDialog();
+            TTP_tip1 = new ToolTip(components);
             MnuBar1.SuspendLayout();
             SuspendLayout();
             // 
@@ -53,8 +55,7 @@
             MnuBar1.Items.AddRange(new ToolStripItem[] { Mnu_File, Mnu_View, toolStripTextBox1, toolStripTextBox2, toolStripTextBox3, toolStripTextBox4 });
             MnuBar1.Location = new Point(0, 0);
             MnuBar1.Name = "MnuBar1";
-            MnuBar1.Padding = new Padding(6, 3, 0, 3);
-            MnuBar1.Size = new Size(902, 32);
+            MnuBar1.Size = new Size(902, 27);
             MnuBar1.TabIndex = 0;
             MnuBar1.Text = "menuStrip1";
             // 
@@ -62,20 +63,20 @@
             // 
             Mnu_File.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Save, Mnu_Load });
             Mnu_File.Name = "Mnu_File";
-            Mnu_File.Size = new Size(41, 26);
+            Mnu_File.Size = new Size(37, 23);
             Mnu_File.Text = "File";
             // 
             // Mnu_Save
             // 
             Mnu_Save.Name = "Mnu_Save";
-            Mnu_Save.Size = new Size(108, 24);
+            Mnu_Save.Size = new Size(100, 22);
             Mnu_Save.Text = "Save";
             Mnu_Save.Click += Mnu_Save_Click;
             // 
             // Mnu_Load
             // 
             Mnu_Load.Name = "Mnu_Load";
-            Mnu_Load.Size = new Size(108, 24);
+            Mnu_Load.Size = new Size(100, 22);
             Mnu_Load.Text = "Load";
             Mnu_Load.Click += Mnu_Load_Click;
             // 
@@ -83,70 +84,71 @@
             // 
             Mnu_View.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Scale, Mnu_Refresh });
             Mnu_View.Name = "Mnu_View";
-            Mnu_View.Size = new Size(50, 26);
+            Mnu_View.Size = new Size(44, 23);
             Mnu_View.Text = "View";
             // 
             // Mnu_Scale
             // 
             Mnu_Scale.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Scale20, Mnu_Scale25, Mnu_Scale50 });
             Mnu_Scale.Name = "Mnu_Scale";
-            Mnu_Scale.Size = new Size(123, 24);
+            Mnu_Scale.Size = new Size(113, 22);
             Mnu_Scale.Text = "Scale";
             // 
             // Mnu_Scale20
             // 
             Mnu_Scale20.Name = "Mnu_Scale20";
-            Mnu_Scale20.Size = new Size(105, 24);
+            Mnu_Scale20.Size = new Size(96, 22);
             Mnu_Scale20.Text = "20%";
             Mnu_Scale20.Click += Mnu_Scale20_Click;
             // 
             // Mnu_Scale25
             // 
             Mnu_Scale25.Name = "Mnu_Scale25";
-            Mnu_Scale25.Size = new Size(105, 24);
+            Mnu_Scale25.Size = new Size(96, 22);
             Mnu_Scale25.Text = "25%";
             Mnu_Scale25.Click += Mnu_Scale25_Click;
             // 
             // Mnu_Scale50
             // 
             Mnu_Scale50.Name = "Mnu_Scale50";
-            Mnu_Scale50.Size = new Size(105, 24);
+            Mnu_Scale50.Size = new Size(96, 22);
             Mnu_Scale50.Text = "50%";
             Mnu_Scale50.Click += Mnu_Scale50_Click;
             // 
             // Mnu_Refresh
             // 
             Mnu_Refresh.Name = "Mnu_Refresh";
-            Mnu_Refresh.Size = new Size(123, 24);
+            Mnu_Refresh.Size = new Size(113, 22);
             Mnu_Refresh.Text = "Refresh";
             Mnu_Refresh.Click += Mnu_Refresh_Click;
             // 
             // toolStripTextBox1
             // 
             toolStripTextBox1.Name = "toolStripTextBox1";
-            toolStripTextBox1.Size = new Size(57, 26);
+            toolStripTextBox1.Size = new Size(50, 23);
             // 
             // toolStripTextBox2
             // 
             toolStripTextBox2.Name = "toolStripTextBox2";
-            toolStripTextBox2.Size = new Size(57, 26);
+            toolStripTextBox2.Size = new Size(50, 23);
             // 
             // toolStripTextBox3
             // 
             toolStripTextBox3.Name = "toolStripTextBox3";
-            toolStripTextBox3.Size = new Size(57, 26);
+            toolStripTextBox3.Size = new Size(50, 23);
             // 
             // toolStripTextBox4
             // 
             toolStripTextBox4.Name = "toolStripTextBox4";
-            toolStripTextBox4.Size = new Size(57, 26);
+            toolStripTextBox4.Size = new Size(50, 23);
             // 
             // panel1
             // 
             panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(0, 32);
+            panel1.Location = new Point(0, 27);
+            panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(902, 418);
+            panel1.Size = new Size(902, 352);
             panel1.TabIndex = 1;
             // 
             // saveFileDialog1
@@ -165,12 +167,14 @@
             // 
             // PSWin
             // 
-            AutoScaleDimensions = new SizeF(8F, 19F);
+            AutoScaleDimensions = new SizeF(8F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(902, 450);
+            ClientSize = new Size(902, 379);
             Controls.Add(panel1);
             Controls.Add(MnuBar1);
+            Font = new Font("ＭＳ ゴシック", 12F, FontStyle.Regular, GraphicsUnit.Point, 128);
             MainMenuStrip = MnuBar1;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "PSWin";
             Text = "PSWin";
             Activated += PSWin_Activated;
@@ -200,5 +204,7 @@
         private ToolStripTextBox toolStripTextBox4;
         private SaveFileDialog saveFileDialog1;
         private OpenFileDialog openFileDialog1;
+        private HelpProvider helpProvider1;
+        private ToolTip TTP_tip1;
     }
 }

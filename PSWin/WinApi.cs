@@ -106,6 +106,7 @@ namespace PSWin
             public int cy;
             public int bx;
             public int by;
+            public WINDOWINFO _wi;
         }
 
         [DllImport("user32.dll")]
@@ -221,6 +222,7 @@ namespace PSWin
                         StringBuilder tsb = new StringBuilder(l + 1);
                         WinApi.GetWindowText(w, tsb, tsb.Capacity);
                         wpd_rec.title = tsb.ToString();
+                        wpd_rec._wi = _wi;
                         _wpd.Add(wpd_rec);
                     }
                 }
