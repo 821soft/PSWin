@@ -15,7 +15,6 @@ namespace PSWin
             InitializeComponent();
         }
         private int Scale = 5;
-        private IntPtr SelectedWin = 0;
 
 
         private void Lb_MouseHover(object? sender, EventArgs e)
@@ -33,16 +32,16 @@ namespace PSWin
             }
             System.Windows.Forms.Label lb = (System.Windows.Forms.Label)sender;
             lb.BackColor = Color.Yellow;
-            int i = (int)lb.Tag;
-            int x = WinApi._wpd[i].x;
-            int y = WinApi._wpd[i].y;
-            int w = WinApi._wpd[i].cx;
-            int h = WinApi._wpd[i].cy;
-            toolStripTextBox1.Text = $"{x}";
-            toolStripTextBox2.Text = $"{y}";
-            toolStripTextBox3.Text = $"{w}";
-            toolStripTextBox4.Text = $"{h}";
         }
+        private void Lb_DoubleClick(object? sender, EventArgs e)
+        {
+            FrmWin frmwin = new FrmWin();
+            System.Windows.Forms.Label lb = (System.Windows.Forms.Label)sender;
+            int i = (int)lb.Tag ;
+            frmwin.Tag = i ;
+            frmwin.Show();
+        }
+
         private void DrawLayout()
         {
             WinApi._WinPosData();
@@ -66,18 +65,34 @@ namespace PSWin
                 System.Windows.Forms.Label lb = new System.Windows.Forms.Label();
                 lb.Text = $"{i} {item.title}";
                 lb.AutoSize = false;
-                lb.Location = new Point((item.x + item.bx) / Scale, (item.y + item.by) / Scale);
-                lb.Size = new Size((item.cx - (item.bx)) / Scale, (item.cy - (item.by)) / Scale);
+                if ((item._wi.dwStyle & 0x04000000) == 0x04000000)
+                {
+                    lb.Location = new Point(item._wi.rcClient.left / Scale, (item._wi.rcWindow.top) / Scale);
+                    lb.Size = new Size((item._wi.rcClient.right - item._wi.rcClient.left) / Scale,
+                                        (item._wi.rcWindow.bottom - item._wi.rcWindow.top) / Scale);
+                }
+                else
+                {
+                    lb.Location = new Point(item._wi.rcClient.left / Scale, (item._wi.rcClient.top) / Scale);
+                    lb.Size = new Size((item._wi.rcClient.right - item._wi.rcClient.left) / Scale,
+                                        (item._wi.rcClient.bottom - item._wi.rcClient.top) / Scale);
+                }
+                
                 lb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
                 lb.BackColor = Color.White;
                 lb.Tag = i;
                 lb.MouseHover += Lb_MouseHover;
                 lb.MouseLeave += Lb_MouseLeave;
                 lb.Click += Lb_Click;
+                lb.DoubleClick += Lb_DoubleClick;
                 panel1.Controls.Add(lb);
+                int ww = item._wi.rcWindow.right - item._wi.rcWindow.left;
+                int wh = item._wi.rcWindow.bottom - item._wi.rcWindow.top;
+                int cw = item._wi.rcClient.right - item._wi.rcClient.left;
+                int ch = item._wi.rcClient.bottom - item._wi.rcClient.top;
                 string tip = $"HWND:0x{item.whnd:X8}\n";
-                tip += $"rcWindow({item._wi.rcWindow.left},{item._wi.rcWindow.top})-({item._wi.rcWindow.right},{item._wi.rcWindow.bottom})\n";
-                tip += $"rcClient({item._wi.rcClient.left},{item._wi.rcClient.top})-({item._wi.rcClient.right},{item._wi.rcClient.bottom})\n";
+                tip += $"rcWindow({item._wi.rcWindow.left},{item._wi.rcWindow.top})-({item._wi.rcWindow.right},{item._wi.rcWindow.bottom})[{ww},{wh}]\n";
+                tip += $"rcClient({item._wi.rcClient.left},{item._wi.rcClient.top})-({item._wi.rcClient.right},{item._wi.rcClient.bottom})[{cw},{ch}]\n";
                 tip += $"dwStyle:0x{item._wi.dwStyle:X8}\n";
                 tip += $"dwExStyle:0x{item._wi.dwExStyle:X8}\n";
                 tip += $"dwWindowStatus:0x{item._wi.dwWindowStatus:X8}\n";
@@ -141,7 +156,12 @@ namespace PSWin
             for (int i = 1; i < WinApi._wpd.Count; i++)
             {
                 WinApi._st_WinPosData item = WinApi._wpd[i];
-                Debug.Print($"{i},{item.dwstyle:x8},{item.title},{item.x},{item.y},{item.cx},{item.cy},{item.bx},{item.by}");
+                string param = "";
+                param += $"{i}\t{item.dwstyle:x8}\t{item.title}\t";
+                param += $"{item._wi.rcWindow.left}\t{item._wi.rcWindow.top}\t{item._wi.rcWindow.right}\t{item._wi.rcWindow.bottom}\t";
+                param += $"{item._wi.rcClient.left}\t{item._wi.rcClient.top}\t{item._wi.rcClient.right}\t{item._wi.rcClient.bottom}";
+
+                Debug.Print(param);
             }
 
             // 文字コードを指定
@@ -153,8 +173,14 @@ namespace PSWin
             for (int i = 1; i < WinApi._wpd.Count; i++)
             {
                 WinApi._st_WinPosData item = WinApi._wpd[i];
+
+                string param = "";
+                param += $"{i}\t{item.dwstyle:x8}\t{item.title}\t";
+                param += $"{item._wi.rcWindow.left}\t{item._wi.rcWindow.top}\t{item._wi.rcWindow.right}\t{item._wi.rcWindow.bottom}\t";
+                param += $"{item._wi.rcClient.left}\t{item._wi.rcClient.top}\t{item._wi.rcClient.right}\t{item._wi.rcClient.bottom}";
+
                 // テキストを書き込む
-                writer.WriteLine($"{i}\t{item.dwstyle:x8}\t{item.title}\t{item.x}\t{item.y}\t{item.cx}\t{item.cy}\t{item.bx}\t{item.by}");
+                writer.WriteLine(param);
             }
             // ファイルを閉じる
             writer.Close();
@@ -187,11 +213,9 @@ namespace PSWin
                 {
                     int x = int.Parse(dat[3]);
                     int y = int.Parse(dat[4]);
-                    int w = int.Parse(dat[5]);
-                    int h = int.Parse(dat[6]);
-                    int bx = int.Parse(dat[7]);
-                    int by = int.Parse(dat[8]);
-                    var ret = WinApi._MoveWindows(dat[2], x, y, w, h, bx, by);
+                    int w = int.Parse(dat[5])-x;
+                    int h = int.Parse(dat[6])-y;
+                    var ret = WinApi._MoveWindows(dat[2], x, y, w, h );
                     Debug.Print($"{ret} {dat[2]}");
 
                 }

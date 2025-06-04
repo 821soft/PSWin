@@ -40,11 +40,9 @@ namespace PSWin
                     {
                         int x = int.Parse(dat[3]);
                         int y = int.Parse(dat[4]);
-                        int w = int.Parse(dat[5]);
-                        int h = int.Parse(dat[6]);
-                        int bx = int.Parse(dat[7]);
-                        int by = int.Parse(dat[8]);
-                        var ret = WinApi._MoveWindows(dat[2], x, y, w, h, bx, by);
+                        int w = int.Parse(dat[5])-x;
+                        int h = int.Parse(dat[6])-y;
+                        var ret = WinApi._MoveWindows(dat[2], x, y, w, h);
                         Debug.Print($"{ret}");
 
                     }

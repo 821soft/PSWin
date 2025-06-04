@@ -39,10 +39,6 @@
             Mnu_Scale25 = new ToolStripMenuItem();
             Mnu_Scale50 = new ToolStripMenuItem();
             Mnu_Refresh = new ToolStripMenuItem();
-            toolStripTextBox1 = new ToolStripTextBox();
-            toolStripTextBox2 = new ToolStripTextBox();
-            toolStripTextBox3 = new ToolStripTextBox();
-            toolStripTextBox4 = new ToolStripTextBox();
             panel1 = new Panel();
             saveFileDialog1 = new SaveFileDialog();
             openFileDialog1 = new OpenFileDialog();
@@ -52,7 +48,7 @@
             // 
             // MnuBar1
             // 
-            MnuBar1.Items.AddRange(new ToolStripItem[] { Mnu_File, Mnu_View, toolStripTextBox1, toolStripTextBox2, toolStripTextBox3, toolStripTextBox4 });
+            MnuBar1.Items.AddRange(new ToolStripItem[] { Mnu_File, Mnu_View });
             MnuBar1.Location = new Point(0, 0);
             MnuBar1.Name = "MnuBar1";
             MnuBar1.Size = new Size(902, 27);
@@ -63,20 +59,20 @@
             // 
             Mnu_File.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Save, Mnu_Load });
             Mnu_File.Name = "Mnu_File";
-            Mnu_File.Size = new Size(37, 23);
+            Mnu_File.Size = new Size(41, 23);
             Mnu_File.Text = "File";
             // 
             // Mnu_Save
             // 
             Mnu_Save.Name = "Mnu_Save";
-            Mnu_Save.Size = new Size(100, 22);
+            Mnu_Save.Size = new Size(180, 24);
             Mnu_Save.Text = "Save";
             Mnu_Save.Click += Mnu_Save_Click;
             // 
             // Mnu_Load
             // 
             Mnu_Load.Name = "Mnu_Load";
-            Mnu_Load.Size = new Size(100, 22);
+            Mnu_Load.Size = new Size(180, 24);
             Mnu_Load.Text = "Load";
             Mnu_Load.Click += Mnu_Load_Click;
             // 
@@ -84,63 +80,43 @@
             // 
             Mnu_View.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Scale, Mnu_Refresh });
             Mnu_View.Name = "Mnu_View";
-            Mnu_View.Size = new Size(44, 23);
+            Mnu_View.Size = new Size(50, 23);
             Mnu_View.Text = "View";
             // 
             // Mnu_Scale
             // 
             Mnu_Scale.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Scale20, Mnu_Scale25, Mnu_Scale50 });
             Mnu_Scale.Name = "Mnu_Scale";
-            Mnu_Scale.Size = new Size(113, 22);
+            Mnu_Scale.Size = new Size(123, 24);
             Mnu_Scale.Text = "Scale";
             // 
             // Mnu_Scale20
             // 
             Mnu_Scale20.Name = "Mnu_Scale20";
-            Mnu_Scale20.Size = new Size(96, 22);
+            Mnu_Scale20.Size = new Size(105, 24);
             Mnu_Scale20.Text = "20%";
             Mnu_Scale20.Click += Mnu_Scale20_Click;
             // 
             // Mnu_Scale25
             // 
             Mnu_Scale25.Name = "Mnu_Scale25";
-            Mnu_Scale25.Size = new Size(96, 22);
+            Mnu_Scale25.Size = new Size(105, 24);
             Mnu_Scale25.Text = "25%";
             Mnu_Scale25.Click += Mnu_Scale25_Click;
             // 
             // Mnu_Scale50
             // 
             Mnu_Scale50.Name = "Mnu_Scale50";
-            Mnu_Scale50.Size = new Size(96, 22);
+            Mnu_Scale50.Size = new Size(105, 24);
             Mnu_Scale50.Text = "50%";
             Mnu_Scale50.Click += Mnu_Scale50_Click;
             // 
             // Mnu_Refresh
             // 
             Mnu_Refresh.Name = "Mnu_Refresh";
-            Mnu_Refresh.Size = new Size(113, 22);
+            Mnu_Refresh.Size = new Size(123, 24);
             Mnu_Refresh.Text = "Refresh";
             Mnu_Refresh.Click += Mnu_Refresh_Click;
-            // 
-            // toolStripTextBox1
-            // 
-            toolStripTextBox1.Name = "toolStripTextBox1";
-            toolStripTextBox1.Size = new Size(50, 23);
-            // 
-            // toolStripTextBox2
-            // 
-            toolStripTextBox2.Name = "toolStripTextBox2";
-            toolStripTextBox2.Size = new Size(50, 23);
-            // 
-            // toolStripTextBox3
-            // 
-            toolStripTextBox3.Name = "toolStripTextBox3";
-            toolStripTextBox3.Size = new Size(50, 23);
-            // 
-            // toolStripTextBox4
-            // 
-            toolStripTextBox4.Name = "toolStripTextBox4";
-            toolStripTextBox4.Size = new Size(50, 23);
             // 
             // panel1
             // 
@@ -198,10 +174,6 @@
         private ToolStripMenuItem Mnu_Refresh;
         private ToolStripMenuItem Mnu_Save;
         private ToolStripMenuItem Mnu_Load;
-        private ToolStripTextBox toolStripTextBox1;
-        private ToolStripTextBox toolStripTextBox2;
-        private ToolStripTextBox toolStripTextBox3;
-        private ToolStripTextBox toolStripTextBox4;
         private SaveFileDialog saveFileDialog1;
         private OpenFileDialog openFileDialog1;
         private HelpProvider helpProvider1;
