@@ -258,10 +258,15 @@ namespace PSWin
             ret = MoveWindow(hwnd, x, y, w, h,true);
             return (ret);
         }
-        public static Boolean _DrawRect(RECT rect)
+        public static Boolean _DrawRect(Color c , RECT rect)
         {
 
             IntPtr desktopDC = GetDC(IntPtr.Zero);
+            using (Graphics g = Graphics.FromHdc(desktopDC))
+            {
+                Pen p = new Pen(c);
+                g.DrawRectangle(p,rect.left,rect.top,rect.right-rect.left,rect.bottom-rect.top);
+            }
             return (false);
         }
 

@@ -18,6 +18,7 @@ namespace PSWin
             InitializeComponent();
         }
         private WinApi._st_WinPosData item = new WinApi._st_WinPosData();
+        RECT offset_wc = new RECT();
         private void FrmWin_Shown(object sender, EventArgs e)
         {
             int i = (int)this.Tag;
@@ -34,63 +35,42 @@ namespace PSWin
             NUD_Height.Maximum = 10000;
             NUD_Height.Minimum = -10000;
             NUD_Height.Value = item._wi.rcClient.bottom - item._wi.rcClient.top;
-            NUD_Right.Maximum = 10000;
-            NUD_Right.Minimum = -10000;
-            NUD_Right.Value = item._wi.rcClient.right;
-            NUD_Bottom.Maximum = 10000;
-            NUD_Bottom.Minimum = -10000;
-            NUD_Bottom.Value = item._wi.rcClient.bottom;
+            WinApi._DrawRect(Color.Red , item._wi.rcWindow);
+            WinApi._DrawRect(Color.Blue, item._wi.rcClient);
+            offset_wc.left = item._wi.rcWindow.left - item._wi.rcClient.left;
+            offset_wc.top = item._wi.rcWindow.top - item._wi.rcClient.top;
+            offset_wc.right = item._wi.rcWindow.right - item._wi.rcClient.right;
+            offset_wc.bottom = item._wi.rcWindow.bottom - item._wi.rcClient.bottom;
+            var lt = $"({offset_wc.left},{offset_wc.top})-({offset_wc.right},{offset_wc.bottom})";
+            label1.Text = lt ;
         }
 
         private void Btn_Move_Click(object sender, EventArgs e)
         {
             WinApi.RECT rect = new WinApi.RECT();
 
-            IntPtr hwnd = item.whnd;
+            rect.left = (int)NUD_Left.Value + offset_wc.left;
+            rect.top = (int)NUD_Top.Value + offset_wc.top; 
+            rect.right = (int)NUD_Left.Value + (int)NUD_Width.Value + offset_wc.right ;
+            rect.bottom = (int)NUD_Top.Value + (int)NUD_Height.Value + offset_wc.bottom ;
 
-            if ((item._wi.dwStyle & 0x06000000) == 0x06000000)
-            {
-                rect.top = (int)NUD_Top.Value;
-                rect.left = (int)NUD_Left.Value - (int)item._wi.cxWindowBorders;
-                rect.bottom = (int)NUD_Bottom.Value + (int)item._wi.cyWindowBorders;
-                rect.right = (int)NUD_Right.Value + (int)item._wi.cxWindowBorders;
-                int w = rect.right - rect.left;
-                int h = rect.bottom - rect.top;
-
-                var ret  = MoveWindow(hwnd, rect.left, rect.top, w, h, true);
-
-            }
-            else if ((item._wi.dwStyle & 0x04000000) == 0x04000000)
-            {
-                rect.top = (int)NUD_Top.Value - (int)item._wi.cyWindowBorders;
-                rect.left = (int)NUD_Left.Value - (int)item._wi.cxWindowBorders;
-                rect.bottom = (int)NUD_Bottom.Value + (int)item._wi.cyWindowBorders;
-                rect.right = (int)NUD_Right.Value + (int)item._wi.cxWindowBorders;
-                int w = rect.right - rect.left;
-                int h = rect.bottom - rect.top;
-
-                var ret = MoveWindow(hwnd, rect.left, rect.top, w, h, true);
-            }
+            WinApi._DrawRect(Color.Yellow, rect);
         }
 
         private void NUD_Height_ValueChanged(object sender, EventArgs e)
         {
-            NUD_Bottom.Value = NUD_Top.Value + NUD_Height.Value;
         }
 
         private void NUD_Width_ValueChanged(object sender, EventArgs e)
         {
-            NUD_Right.Value = NUD_Left.Value + NUD_Width.Value;
         }
 
         private void NUD_Left_ValueChanged(object sender, EventArgs e)
         {
-            NUD_Right.Value = NUD_Left.Value + NUD_Width.Value;
         }
 
         private void NUD_Top_ValueChanged(object sender, EventArgs e)
         {
-            NUD_Bottom.Value = NUD_Top.Value + NUD_Height.Value;
         }
 
         private void Btn_Cancel_Click(object sender, EventArgs e)
@@ -100,7 +80,21 @@ namespace PSWin
 
         private void Btn_Ok_Click(object sender, EventArgs e)
         {
+            WinApi.RECT rect = new WinApi.RECT();
+
+            IntPtr hwnd = item.whnd;
+
             Btn_Move_Click(sender, e) ;
+            // rcClient to rcWindow
+            rect.left = (int)NUD_Left.Value + offset_wc.left;
+            rect.top = (int)NUD_Top.Value + offset_wc.top;
+            rect.right = (int)NUD_Left.Value + (int)NUD_Width.Value + offset_wc.right;
+            rect.bottom = (int)NUD_Top.Value + (int)NUD_Height.Value + offset_wc.bottom;
+
+            int w = rect.right - rect.left;
+            int h = rect.bottom - rect.top;
+
+            var ret = MoveWindow(hwnd, rect.left, rect.top, w, h, true);
             this.Close();
         }
     }

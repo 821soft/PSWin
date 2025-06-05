@@ -13,6 +13,18 @@ namespace PSWin
         public PSWin()
         {
             InitializeComponent();
+
+            string msg = "";
+            foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+            {
+                msg += "Device Name: " + screen.DeviceName + "\n";
+                msg += "Bounds: " + screen.Bounds.ToString() + "\n";
+                msg += "Type: " + screen.GetType().ToString() + "\n";
+                msg += "Working Area: " + screen.WorkingArea.ToString() + "\n";
+                msg += "Primary Screen: " + screen.Primary.ToString() + "\n";
+            }
+            MessageBox.Show(msg);
+
         }
         private int Scale = 5;
 
@@ -116,6 +128,14 @@ namespace PSWin
             panel1.Size = new Size(d_w / Scale, d_h / Scale);
 
             this.ClientSize = new Size(d_w / Scale, (d_h / Scale) + MnuBar1.Height);
+
+            foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+            {
+                // screen.Bounds;
+                // screen.WorkingArea;
+            }
+
+
             DrawLayout();
 
         }
