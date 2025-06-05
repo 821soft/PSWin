@@ -13,18 +13,6 @@ namespace PSWin
         public PSWin()
         {
             InitializeComponent();
-
-            string msg = "";
-            foreach (var screen in System.Windows.Forms.Screen.AllScreens)
-            {
-                msg += "Device Name: " + screen.DeviceName + "\n";
-                msg += "Bounds: " + screen.Bounds.ToString() + "\n";
-                msg += "Type: " + screen.GetType().ToString() + "\n";
-                msg += "Working Area: " + screen.WorkingArea.ToString() + "\n";
-                msg += "Primary Screen: " + screen.Primary.ToString() + "\n";
-            }
-            MessageBox.Show(msg);
-
         }
         private int Scale = 5;
 
@@ -32,15 +20,18 @@ namespace PSWin
         private void Lb_MouseHover(object? sender, EventArgs e)
         {
         }
-        private void Lb_MouseLeave(object? sender, EventArgs e)
+        private void Lb_MouseLeave( object? sender, EventArgs e )
         {
         }
 
-        private void Lb_Click(object? sender, EventArgs e)
+        private void Lb_Click( object? sender, EventArgs e )
         {
             foreach (System.Windows.Forms.Label lbc in panel1.Controls)
             {
-                lbc.BackColor = Color.White;
+                if (lbc.Tag != null)
+                {
+                    lbc.BackColor = Color.White;
+                }
             }
             System.Windows.Forms.Label lb = (System.Windows.Forms.Label)sender;
             lb.BackColor = Color.Yellow;
@@ -67,6 +58,32 @@ namespace PSWin
                 // •Ï‰»‚ ‚è
                 WinApi._WinPosData_store();
                 panel1.Controls.Clear();
+                foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+                {
+                    // screen.Bounds;
+                    // screen.WorkingArea;
+                    System.Windows.Forms.Label lb = new System.Windows.Forms.Label();
+                    lb.Text = screen.DeviceName;
+                    lb.AutoSize = false;
+                    lb.Location = new Point(screen.Bounds.X / Scale, screen.Bounds.Y / Scale);
+                    lb.Size = new Size((screen.Bounds.Width) / Scale,
+                                        (screen.Bounds.Height) / Scale);
+                    lb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+                    lb.BackColor = Color.Black;
+                    // panel1.Controls.Add(lb);
+                    System.Windows.Forms.Label lb2 = new System.Windows.Forms.Label();
+                    lb2.Text = screen.DeviceName;
+                    lb2.AutoSize = false;
+                    lb2.Location = new Point(screen.WorkingArea.X/ Scale, screen.WorkingArea.Y / Scale);
+                    lb2.Size = new Size((screen.WorkingArea.Width) / Scale,
+                                        (screen.WorkingArea.Height) / Scale);
+                    lb2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+                    lb2.BackColor = Color.Blue;
+                    panel1.Controls.Add(lb2);
+
+
+                }
+
             }
 
             var cnt = WinApi._wpd.Count() - 1;
@@ -128,13 +145,6 @@ namespace PSWin
             panel1.Size = new Size(d_w / Scale, d_h / Scale);
 
             this.ClientSize = new Size(d_w / Scale, (d_h / Scale) + MnuBar1.Height);
-
-            foreach (var screen in System.Windows.Forms.Screen.AllScreens)
-            {
-                // screen.Bounds;
-                // screen.WorkingArea;
-            }
-
 
             DrawLayout();
 

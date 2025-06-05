@@ -65,14 +65,14 @@
             // Mnu_Save
             // 
             Mnu_Save.Name = "Mnu_Save";
-            Mnu_Save.Size = new Size(180, 24);
+            Mnu_Save.Size = new Size(108, 24);
             Mnu_Save.Text = "Save";
             Mnu_Save.Click += Mnu_Save_Click;
             // 
             // Mnu_Load
             // 
             Mnu_Load.Name = "Mnu_Load";
-            Mnu_Load.Size = new Size(180, 24);
+            Mnu_Load.Size = new Size(108, 24);
             Mnu_Load.Text = "Load";
             Mnu_Load.Click += Mnu_Load_Click;
             // 
@@ -152,6 +152,7 @@
             MainMenuStrip = MnuBar1;
             Margin = new Padding(3, 2, 3, 2);
             Name = "PSWin";
+            StartPosition = FormStartPosition.CenterScreen;
             Text = "PSWin";
             Activated += PSWin_Activated;
             Shown += PSWin_Shown;
