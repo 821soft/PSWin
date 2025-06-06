@@ -20,11 +20,11 @@ namespace PSWin
         private void Lb_MouseHover(object? sender, EventArgs e)
         {
         }
-        private void Lb_MouseLeave( object? sender, EventArgs e )
+        private void Lb_MouseLeave(object? sender, EventArgs e)
         {
         }
 
-        private void Lb_Click( object? sender, EventArgs e )
+        private void Lb_Click(object? sender, EventArgs e)
         {
             foreach (System.Windows.Forms.Label lbc in panel1.Controls)
             {
@@ -40,8 +40,8 @@ namespace PSWin
         {
             FrmWin frmwin = new FrmWin();
             System.Windows.Forms.Label lb = (System.Windows.Forms.Label)sender;
-            int i = (int)lb.Tag ;
-            frmwin.Tag = i ;
+            int i = (int)lb.Tag;
+            frmwin.Tag = i;
             frmwin.Show();
         }
 
@@ -69,12 +69,13 @@ namespace PSWin
                     lb.Size = new Size((screen.Bounds.Width) / Scale,
                                         (screen.Bounds.Height) / Scale);
                     lb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-                    lb.BackColor = Color.Black;
-                    // panel1.Controls.Add(lb);
+                    lb.BackColor = Color.Gray;
+                    panel1.Controls.Add(lb);
+
                     System.Windows.Forms.Label lb2 = new System.Windows.Forms.Label();
                     lb2.Text = screen.DeviceName;
                     lb2.AutoSize = false;
-                    lb2.Location = new Point(screen.WorkingArea.X/ Scale, screen.WorkingArea.Y / Scale);
+                    lb2.Location = new Point(screen.WorkingArea.X / Scale, screen.WorkingArea.Y / Scale);
                     lb2.Size = new Size((screen.WorkingArea.Width) / Scale,
                                         (screen.WorkingArea.Height) / Scale);
                     lb2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -106,7 +107,7 @@ namespace PSWin
                     lb.Size = new Size((item._wi.rcClient.right - item._wi.rcClient.left) / Scale,
                                         (item._wi.rcClient.bottom - item._wi.rcClient.top) / Scale);
                 }
-                
+
                 lb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
                 lb.BackColor = Color.White;
                 lb.Tag = i;
@@ -243,9 +244,9 @@ namespace PSWin
                 {
                     int x = int.Parse(dat[3]);
                     int y = int.Parse(dat[4]);
-                    int w = int.Parse(dat[5])-x;
-                    int h = int.Parse(dat[6])-y;
-                    var ret = WinApi._MoveWindows(dat[2], x, y, w, h );
+                    int w = int.Parse(dat[5]) - x;
+                    int h = int.Parse(dat[6]) - y;
+                    var ret = WinApi._MoveWindows(dat[2], x, y, w, h);
                     Debug.Print($"{ret} {dat[2]}");
 
                 }
@@ -259,6 +260,26 @@ namespace PSWin
         private void PSWin_Activated(object sender, EventArgs e)
         {
             PSWin_Shown(sender, e);
+        }
+
+        private void Mnu_Tile_Click(object sender, EventArgs e)
+        {
+            int tx = 0;
+            int ty = 0;
+            for ( int i=1; i < WinApi._wpd.Count;i++ )
+            {
+                WinApi._st_WinPosData item = WinApi._wpd[i];
+                RECT rect = new RECT();
+                rect = ClientOffset(item._wi);
+                int x = tx + rect.left;
+                int y = ty ;
+                int w = item._wi.rcWindow.right - item._wi.rcWindow.left ;
+                int h = item._wi.rcWindow.bottom - item._wi.rcWindow.top ;
+                WinApi._MoveWindows(item.title, x, y, w, h);
+                tx += 50;
+                ty += 50;
+            }
+
         }
     }
 }

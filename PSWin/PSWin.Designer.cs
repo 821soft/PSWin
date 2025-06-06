@@ -43,15 +43,17 @@
             saveFileDialog1 = new SaveFileDialog();
             openFileDialog1 = new OpenFileDialog();
             TTP_tip1 = new ToolTip(components);
+            MNU_Align = new ToolStripMenuItem();
+            Mnu_Tile = new ToolStripMenuItem();
             MnuBar1.SuspendLayout();
             SuspendLayout();
             // 
             // MnuBar1
             // 
-            MnuBar1.Items.AddRange(new ToolStripItem[] { Mnu_File, Mnu_View });
+            MnuBar1.Items.AddRange(new ToolStripItem[] { Mnu_File, Mnu_View, MNU_Align });
             MnuBar1.Location = new Point(0, 0);
             MnuBar1.Name = "MnuBar1";
-            MnuBar1.Size = new Size(902, 27);
+            MnuBar1.Size = new Size(902, 24);
             MnuBar1.TabIndex = 0;
             MnuBar1.Text = "menuStrip1";
             // 
@@ -59,20 +61,20 @@
             // 
             Mnu_File.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Save, Mnu_Load });
             Mnu_File.Name = "Mnu_File";
-            Mnu_File.Size = new Size(41, 23);
+            Mnu_File.Size = new Size(37, 20);
             Mnu_File.Text = "File";
             // 
             // Mnu_Save
             // 
             Mnu_Save.Name = "Mnu_Save";
-            Mnu_Save.Size = new Size(108, 24);
+            Mnu_Save.Size = new Size(100, 22);
             Mnu_Save.Text = "Save";
             Mnu_Save.Click += Mnu_Save_Click;
             // 
             // Mnu_Load
             // 
             Mnu_Load.Name = "Mnu_Load";
-            Mnu_Load.Size = new Size(108, 24);
+            Mnu_Load.Size = new Size(100, 22);
             Mnu_Load.Text = "Load";
             Mnu_Load.Click += Mnu_Load_Click;
             // 
@@ -80,51 +82,52 @@
             // 
             Mnu_View.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Scale, Mnu_Refresh });
             Mnu_View.Name = "Mnu_View";
-            Mnu_View.Size = new Size(50, 23);
+            Mnu_View.Size = new Size(44, 20);
             Mnu_View.Text = "View";
             // 
             // Mnu_Scale
             // 
             Mnu_Scale.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Scale20, Mnu_Scale25, Mnu_Scale50 });
             Mnu_Scale.Name = "Mnu_Scale";
-            Mnu_Scale.Size = new Size(123, 24);
+            Mnu_Scale.Size = new Size(113, 22);
             Mnu_Scale.Text = "Scale";
             // 
             // Mnu_Scale20
             // 
             Mnu_Scale20.Name = "Mnu_Scale20";
-            Mnu_Scale20.Size = new Size(105, 24);
+            Mnu_Scale20.Size = new Size(96, 22);
             Mnu_Scale20.Text = "20%";
             Mnu_Scale20.Click += Mnu_Scale20_Click;
             // 
             // Mnu_Scale25
             // 
             Mnu_Scale25.Name = "Mnu_Scale25";
-            Mnu_Scale25.Size = new Size(105, 24);
+            Mnu_Scale25.Size = new Size(96, 22);
             Mnu_Scale25.Text = "25%";
             Mnu_Scale25.Click += Mnu_Scale25_Click;
             // 
             // Mnu_Scale50
             // 
             Mnu_Scale50.Name = "Mnu_Scale50";
-            Mnu_Scale50.Size = new Size(105, 24);
+            Mnu_Scale50.Size = new Size(96, 22);
             Mnu_Scale50.Text = "50%";
             Mnu_Scale50.Click += Mnu_Scale50_Click;
             // 
             // Mnu_Refresh
             // 
             Mnu_Refresh.Name = "Mnu_Refresh";
-            Mnu_Refresh.Size = new Size(123, 24);
+            Mnu_Refresh.Size = new Size(113, 22);
             Mnu_Refresh.Text = "Refresh";
             Mnu_Refresh.Click += Mnu_Refresh_Click;
             // 
             // panel1
             // 
+            panel1.BackColor = Color.Black;
             panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(0, 27);
+            panel1.Location = new Point(0, 24);
             panel1.Margin = new Padding(3, 2, 3, 2);
             panel1.Name = "panel1";
-            panel1.Size = new Size(902, 352);
+            panel1.Size = new Size(902, 355);
             panel1.TabIndex = 1;
             // 
             // saveFileDialog1
@@ -140,6 +143,20 @@
             openFileDialog1.FileName = "pswin.psw";
             openFileDialog1.Filter = "pswデータ|*.psw|すべて|*.*";
             openFileDialog1.Title = "開く";
+            // 
+            // MNU_Align
+            // 
+            MNU_Align.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Tile });
+            MNU_Align.Name = "MNU_Align";
+            MNU_Align.Size = new Size(47, 20);
+            MNU_Align.Text = "Align";
+            // 
+            // Mnu_Tile
+            // 
+            Mnu_Tile.Name = "Mnu_Tile";
+            Mnu_Tile.Size = new Size(180, 22);
+            Mnu_Tile.Text = "Tile";
+            Mnu_Tile.Click += Mnu_Tile_Click;
             // 
             // PSWin
             // 
@@ -179,5 +196,7 @@
         private OpenFileDialog openFileDialog1;
         private HelpProvider helpProvider1;
         private ToolTip TTP_tip1;
+        private ToolStripMenuItem MNU_Align;
+        private ToolStripMenuItem Mnu_Tile;
     }
 }

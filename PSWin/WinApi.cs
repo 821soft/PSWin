@@ -269,6 +269,25 @@ namespace PSWin
             }
             return (false);
         }
+        public static RECT ClientOffset(WINDOWINFO wi)
+        {
+            RECT rect = new RECT();
+            rect.left = wi.rcWindow.left - wi.rcClient.left;
+            rect.top = wi.rcWindow.top - wi.rcClient.top;
+            rect.right = wi.rcWindow.right - wi.rcClient.right;
+            rect.bottom = wi.rcWindow.bottom - wi.rcClient.bottom;
+            return (rect);
+        }
+        public static RECT Client2Window( RECT wc , RECT wm )
+        {
+            RECT rect = new RECT();
+            rect.left = wc.left + wm.left;
+            rect.top = wc.top ;
+            rect.right = wc.right + wm.right;
+            rect.bottom = wc.bottom + wm.bottom;
+            return (rect);
+        }
+
 
 
     }
