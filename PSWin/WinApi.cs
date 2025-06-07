@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Net.Sockets;
-using System.Diagnostics;
+using static PSWin.WinApi;
 
 namespace PSWin
 {
@@ -39,7 +40,7 @@ namespace PSWin
         public const int SWP_NOSIZE = 0x0001;//現在のサイズを保持（cx,cyパラメーターを無視）。
         public const int SWP_NOMOVE = 0x0002;//現在位置を保持（X,Yパラメーターを無視）。
         public const int SWP_NOZORDER = 0x0004;
-        public const int SWP_NOACTIVATE = 0x0010 ;
+        public const int SWP_NOACTIVATE = 0x0010;
         public const int SWP_SHOWWINDOW = 0x0040;
         public const int SWP_ASYNCWINDOWPOS = 0x4000;
 
@@ -59,7 +60,7 @@ namespace PSWin
         public const uint GW_HWNDPREV = 3;
         public const uint GW_OWNER = 5;
         [DllImport("USER32.DLL", SetLastError = true, CharSet = CharSet.Auto)]
-        public static extern IntPtr GetWindow(IntPtr HWND , uint uCmd);
+        public static extern IntPtr GetWindow(IntPtr HWND, uint uCmd);
 
         [DllImport("USER32.DLL", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern IntPtr GetNextWindow(IntPtr HWND, uint uCmd);
@@ -116,7 +117,7 @@ namespace PSWin
         public static extern int GetWindowTextLength(IntPtr hWnd);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool MoveWindow(IntPtr hWnd,int x,int y,int nWidth,int nHeight, bool bRepaint);
+        public static extern bool MoveWindow(IntPtr hWnd, int x, int y, int nWidth, int nHeight, bool bRepaint);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -147,9 +148,9 @@ namespace PSWin
             int index = -1;
             foreach (var item in _wpd)
             {
-                if(item.title.Equals(title))
+                if (item.title.Equals(title))
                 {
-                    return( index );
+                    return (index);
                 }
                 index++;
             }
@@ -169,27 +170,27 @@ namespace PSWin
         {
             _st_WinPosData a = new _st_WinPosData();
             _st_WinPosData b = new _st_WinPosData();
-            if ( _wpd.Count != _wpd_stor.Count )
+            if (_wpd.Count != _wpd_stor.Count)
             {
-                return ( true );
+                return (true);
             }
 
-            for ( int i = 0; i< _wpd_stor.Count;i++)
+            for (int i = 0; i < _wpd_stor.Count; i++)
             {
                 a = _wpd[i];
                 b = _wpd_stor[i];
 
                 string e = "";
-                if ( a.title != b.title) { e += $"{a.title} {b.title} ";}
+                if (a.title != b.title) { e += $"{a.title} {b.title} "; }
                 if (a.dwstyle != b.dwstyle) { e += $"style {a.dwstyle:x8} {b.dwstyle:x8} "; }
                 if (a.whnd != b.whnd) { e += $"whnd {a.whnd:x8} {b.whnd:x8} "; }
                 if (a.x != b.x) { e += $"x {a.x:d} {b.x:d} "; }
-                if (a.y != b.y) { e += $"y {a.y:d} {b.y:d} "; } 
+                if (a.y != b.y) { e += $"y {a.y:d} {b.y:d} "; }
                 if (a.cx != b.cx) { e += $"cx {a.cx:d} {b.cx:d} "; }
                 if (a.cy != b.cy) { e += $"cy {a.cy:d} {b.cy:d} "; }
-                if ( e.Length > 1 )
+                if (e.Length > 1)
                 {
-                    Debug.Print($"{i} {e} {b.title}" );
+                    Debug.Print($"{i} {e} {b.title}");
                     return (true);
                 }
             }
@@ -212,7 +213,7 @@ namespace PSWin
                 if ((_wi.dwStyle & WinApi.WS_VISIBLE) != 0)
                 {
                     // if ( ((_wi.dwStyle & WinApi.WS_TABSTOP) != 0) && (_wi.dwStyle & WinApi.WS_ICONIC) == 0) 
-                    if ( ((_wi.dwStyle & 0x80000000) != 0x80000000) && ((_wi.dwStyle & 0x50000000) != 0x50000000) && ((_wi.dwStyle & 0x30000000) != 0x30000000))
+                    if (((_wi.dwStyle & 0x80000000) != 0x80000000) && ((_wi.dwStyle & 0x50000000) != 0x50000000) && ((_wi.dwStyle & 0x30000000) != 0x30000000))
                     {
                         _st_WinPosData wpd_rec = new _st_WinPosData();
                         wpd_rec.whnd = w;
@@ -221,7 +222,7 @@ namespace PSWin
                         wpd_rec.y = _wi.rcWindow.top;// + (int)_wi.cyWindowBorders;
                         wpd_rec.cx = _wi.rcWindow.right - _wi.rcWindow.left;// - ((int)_wi.cxWindowBorders*2);
                         wpd_rec.cy = _wi.rcWindow.bottom - _wi.rcWindow.top;// - ((int)_wi.cyWindowBorders*2); ;
-                        wpd_rec.bx = (int)_wi.cxWindowBorders ;
+                        wpd_rec.bx = (int)_wi.cxWindowBorders;
                         wpd_rec.by = (int)_wi.cyWindowBorders;
                         int l = WinApi.GetWindowTextLength(w);
                         StringBuilder tsb = new StringBuilder(l + 1);
@@ -249,23 +250,23 @@ namespace PSWin
         /*
          * (-11, 0)-(1197, 752) 1208x752
          */
-        public static Boolean _MoveWindows(string title,int x ,int y,int w,int h)
+        public static Boolean _MoveWindows(string title, int x, int y, int w, int h)
         {
             IntPtr hwnd = IntPtr.Zero;
             bool ret = false;
 
-            hwnd = _FindWindow(null,title);
-            ret = MoveWindow(hwnd, x, y, w, h,true);
+            hwnd = _FindWindow(null, title);
+            ret = MoveWindow(hwnd, x, y, w, h, true);
             return (ret);
         }
-        public static Boolean _DrawRect(Color c , RECT rect)
+        public static Boolean _DrawRect(Color c, RECT rect)
         {
 
             IntPtr desktopDC = GetDC(IntPtr.Zero);
             using (Graphics g = Graphics.FromHdc(desktopDC))
             {
                 Pen p = new Pen(c);
-                g.DrawRectangle(p,rect.left,rect.top,rect.right-rect.left,rect.bottom-rect.top);
+                g.DrawRectangle(p, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top);
             }
             return (false);
         }
@@ -273,27 +274,44 @@ namespace PSWin
         {
             RECT rect = new RECT();
             rect.left = wi.rcWindow.left - wi.rcClient.left;
-            rect.top = wi.rcWindow.top - wi.rcClient.top;
+            rect.top = wi.rcWindow.top;
             rect.right = wi.rcWindow.right - wi.rcClient.right;
             rect.bottom = wi.rcWindow.bottom - wi.rcClient.bottom;
             return (rect);
         }
-        public static RECT Client2Window( RECT wc , RECT wm )
+        public static RECT Client2Window(RECT wc, RECT wm)
         {
             RECT rect = new RECT();
             rect.left = wc.left + wm.left;
-            rect.top = wc.top ;
+            rect.top = wc.top;
             rect.right = wc.right + wm.right;
             rect.bottom = wc.bottom + wm.bottom;
             return (rect);
         }
+        public static RECT ViewRect(WINDOWINFO wi,ref RECT Orect)
+        {
+            RECT rect = new RECT();
+            Orect = ClientOffset(wi);
 
+            rect.left = wi.rcWindow.left - Orect.left;
+            rect.top = wi.rcWindow.top;
+            rect.right = wi.rcWindow.right - Orect.right;
+            rect.bottom = wi.rcWindow.bottom - Orect.bottom;
+            return (rect);
+        }
+        public static RECT View2WindowRect(RECT Vrect ,RECT Orect)
+        {
+            RECT rect = new RECT();
 
+            rect.left = Vrect.left + Orect.left;
+            rect.top = Vrect.top;
+            rect.right = Vrect.right + Orect.right;
+            rect.bottom = Vrect.bottom + Orect.bottom;
+            return (rect);
+        }
 
     }
-
-
-    public delegate bool EnumWindowsDelegate(IntPtr hWnd, IntPtr lparam);
+        public delegate bool EnumWindowsDelegate(IntPtr hWnd, IntPtr lparam);
 
 
     /// <summary>

@@ -37,7 +37,6 @@
             pictureBox1 = new PictureBox();
             Btn_Ok = new Button();
             Btn_Cancel = new Button();
-            Btn_Move = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)NUD_Width).BeginInit();
             ((System.ComponentModel.ISupportInitialize)NUD_Height).BeginInit();
@@ -134,22 +133,13 @@
             Btn_Cancel.UseVisualStyleBackColor = true;
             Btn_Cancel.Click += Btn_Cancel_Click;
             // 
-            // Btn_Move
-            // 
-            Btn_Move.Location = new Point(318, 312);
-            Btn_Move.Name = "Btn_Move";
-            Btn_Move.Size = new Size(75, 30);
-            Btn_Move.TabIndex = 9;
-            Btn_Move.Text = "Test";
-            Btn_Move.UseVisualStyleBackColor = true;
-            Btn_Move.Click += Btn_Move_Click;
-            // 
             // FrmWin
             // 
+            AcceptButton = Btn_Ok;
             AutoScaleDimensions = new SizeF(8F, 19F);
             AutoScaleMode = AutoScaleMode.Font;
+            CancelButton = Btn_Cancel;
             ClientSize = new Size(563, 348);
-            Controls.Add(Btn_Move);
             Controls.Add(Btn_Cancel);
             Controls.Add(Btn_Ok);
             Controls.Add(panel1);
@@ -179,7 +169,6 @@
         private NumericUpDown NUD_Left;
         private Button Btn_Ok;
         private Button Btn_Cancel;
-        private Button Btn_Move;
         private Label label1;
     }
 }

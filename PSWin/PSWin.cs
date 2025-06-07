@@ -92,21 +92,20 @@ namespace PSWin
             for (int i = cnt; i > 0; i--)
             {
                 WinApi._st_WinPosData item = WinApi._wpd[i];
+                //WinApi._DrawRect(Color.Red, item._wi.rcWindow);
+                //WinApi._DrawRect(Color.Blue, item._wi.rcClient);
+                RECT vrect = new RECT();
+                RECT orect = new RECT();
+                vrect = ViewRect(item._wi,ref orect);
+                // WinApi._DrawRect(Color.Yellow, vrect);
+
                 System.Windows.Forms.Label lb = new System.Windows.Forms.Label();
                 lb.Text = $"{i} {item.title}";
                 lb.AutoSize = false;
-                if ((item._wi.dwStyle & 0x04000000) == 0x04000000)
-                {
-                    lb.Location = new Point(item._wi.rcClient.left / Scale, (item._wi.rcWindow.top) / Scale);
-                    lb.Size = new Size((item._wi.rcClient.right - item._wi.rcClient.left) / Scale,
-                                        (item._wi.rcWindow.bottom - item._wi.rcWindow.top) / Scale);
-                }
-                else
-                {
-                    lb.Location = new Point(item._wi.rcClient.left / Scale, (item._wi.rcClient.top) / Scale);
-                    lb.Size = new Size((item._wi.rcClient.right - item._wi.rcClient.left) / Scale,
-                                        (item._wi.rcClient.bottom - item._wi.rcClient.top) / Scale);
-                }
+                lb.Location = new Point(vrect.left / Scale, (vrect.top) / Scale);
+                lb.Size = new Size((vrect.right - vrect.left) / Scale,
+                                   (vrect.bottom - vrect.top) / Scale);
+
 
                 lb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
                 lb.BackColor = Color.White;
@@ -129,7 +128,6 @@ namespace PSWin
                 tip += $"WindowBorders:({item._wi.cxWindowBorders},{item._wi.cyWindowBorders})\n";
                 TTP_tip1.SetToolTip(lb, tip);
                 lb.BringToFront();
-
             }
         }
 
@@ -236,9 +234,11 @@ namespace PSWin
             }
 
             // s––‚Ü‚Å‚Ps‚¸‚Â“Ç‚Ýž‚Þ
+            IntPtr hWndInsertAfter = IntPtr.Zero;
             while (file.Peek() != -1)
             {
                 var str = file.ReadLine();
+                // Debug.Print(str);
                 string[] dat = str.Split('\t');
                 if (dat.Length > 0)
                 {
@@ -246,8 +246,13 @@ namespace PSWin
                     int y = int.Parse(dat[4]);
                     int w = int.Parse(dat[5]) - x;
                     int h = int.Parse(dat[6]) - y;
-                    var ret = WinApi._MoveWindows(dat[2], x, y, w, h);
-                    Debug.Print($"{ret} {dat[2]}");
+                    IntPtr hwnd = WinApi._FindWindow(null, dat[2]);
+                    if (hwnd != IntPtr.Zero)
+                    {
+                        var ret = WinApi.SetWindowPos(hwnd, hWndInsertAfter, x, y, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOACTIVATE);
+                        Debug.Print($"{ret} {dat[2]}");
+                        hWndInsertAfter = hwnd;
+                    }
 
                 }
             }

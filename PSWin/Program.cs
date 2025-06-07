@@ -31,19 +31,25 @@ namespace PSWin
                 }
 
                 // s––‚Ü‚Å‚Ps‚¸‚Â“Ç‚Ýž‚Þ
+                IntPtr hWndInsertAfter = IntPtr.Zero;
                 while (file.Peek() != -1)
                 {
                     var str = file.ReadLine();
-                    Debug.Print(str);
+                    // Debug.Print(str);
                     string[] dat = str.Split('\t');
                     if (dat.Length > 0)
                     {
                         int x = int.Parse(dat[3]);
                         int y = int.Parse(dat[4]);
-                        int w = int.Parse(dat[5])-x;
-                        int h = int.Parse(dat[6])-y;
-                        var ret = WinApi._MoveWindows(dat[2], x, y, w, h);
-                        Debug.Print($"{ret}");
+                        int w = int.Parse(dat[5]) - x;
+                        int h = int.Parse(dat[6]) - y;
+                        IntPtr hwnd = WinApi._FindWindow(null, dat[2]);
+                        if (hwnd != IntPtr.Zero)
+                        {
+                            var ret = WinApi.SetWindowPos(hwnd, hWndInsertAfter, x, y, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOACTIVATE);
+                            Debug.Print($"{ret} {dat[2]}");
+                            hWndInsertAfter = hwnd;
+                        }
 
                     }
                 }
