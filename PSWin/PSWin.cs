@@ -89,7 +89,7 @@ namespace PSWin
 
             var cnt = WinApi._wpd.Count() - 1;
 
-            for (int i = cnt; i > 0; i--)
+            for (int i = cnt; i >= 0; i--)
             {
                 WinApi._st_WinPosData item = WinApi._wpd[i];
                 //WinApi._DrawRect(Color.Red, item._wi.rcWindow);
@@ -271,16 +271,28 @@ namespace PSWin
         {
             int tx = 0;
             int ty = 0;
-            for ( int i=1; i < WinApi._wpd.Count;i++ )
+            IntPtr whnd = IntPtr.Zero;
+            for ( int i=0; i < WinApi._wpd.Count;i++ )
             {
                 WinApi._st_WinPosData item = WinApi._wpd[i];
-                RECT rect = new RECT();
-                rect = ClientOffset(item._wi);
-                int x = tx + rect.left;
-                int y = ty ;
-                int w = item._wi.rcWindow.right - item._wi.rcWindow.left ;
-                int h = item._wi.rcWindow.bottom - item._wi.rcWindow.top ;
-                WinApi._MoveWindows(item.title, x, y, w, h);
+                RECT orect = new RECT();
+                RECT vrect = new RECT();
+                RECT wrect = new RECT();
+                vrect = ViewRect(item._wi, ref orect);
+                int w = vrect.right - vrect.left;
+                int h = vrect.bottom - vrect.top;
+                vrect.left = tx;
+                vrect.top = ty;
+                vrect.right = vrect.left + w;
+                vrect.bottom = vrect.top + h;
+                wrect = View2WindowRect(vrect, orect);
+
+                var ret = WinApi.SetWindowPos(item.whnd , whnd, wrect.left, wrect.top, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOACTIVATE| WinApi.SWP_NOSIZE);
+                if (ret == true)
+                {
+                    whnd= item.whnd;
+                }
+
                 tx += 50;
                 ty += 50;
             }
