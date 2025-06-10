@@ -244,29 +244,31 @@ namespace PSWin
             for ( int i=0; i < WinApi._wpd.Count;i++ )
             {
                 WinApi._st_WinPosData item = WinApi._wpd[i];
-                if (this.Handle == item.whnd)
-                { continue;}
-                RECT orect = new RECT();
-                RECT vrect = new RECT();
-                RECT wrect = new RECT();
-                vrect = ViewRect(item._wi, ref orect);
-                int w = vrect.right - vrect.left;
-                int h = vrect.bottom - vrect.top;
-                vrect.left = tx;
-                vrect.top = ty;
-                vrect.right = vrect.left + w;
-                vrect.bottom = vrect.top + h;
-                wrect = View2WindowRect(vrect, orect);
-
-                var ret = WinApi.SetWindowPos(item.whnd , WinApi.HWND_NOTOPMOST , wrect.left, wrect.top, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOSIZE);
-                if (ret == true)
+                if (this.Handle != item.whnd)
                 {
-                    whnd = item.whnd;
-                    WinApi.SetForegroundWindow(item.whnd);
-                }
+                    RECT orect = new RECT();
+                    RECT vrect = new RECT();
+                    RECT wrect = new RECT();
+                    vrect = ViewRect(item._wi, ref orect);
+                    int w = vrect.right - vrect.left;
+                    int h = vrect.bottom - vrect.top;
+                    vrect.left = tx;
+                    vrect.top = ty;
+                    vrect.right = vrect.left + w;
+                    vrect.bottom = vrect.top + h;
+                    wrect = View2WindowRect(vrect, orect);
 
-                tx += 50;
-                ty += 50;
+                    var ret = WinApi.SetWindowPos(item.whnd , WinApi.HWND_NOTOPMOST , wrect.left, wrect.top, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOSIZE);
+
+                    if (ret == true)
+                    {
+                        whnd = item.whnd;
+                        WinApi.SetForegroundWindow(item.whnd);
+                        Debug.Print($"{i} {item.title},{tx},{ty}");
+                        tx += 50;
+                        ty += 50;
+                    }
+                }
             }
             PSWin_Shown(sender, e);
 
