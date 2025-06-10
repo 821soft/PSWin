@@ -225,39 +225,8 @@ namespace PSWin
             string path = openFileDialog1.FileName;
             Debug.Print($"Load {path}");
 
-            // ファイルを開く＆文字化け防止
-            StreamReader file = new StreamReader(path, Encoding.GetEncoding("UTF-8"));
-            if (file == null)
-            {
-                Console.WriteLine("ファイルを開けませんでした。");
-                return;
-            }
+            Program.LoadSet( path );
 
-            // 行末まで１行ずつ読み込む
-            IntPtr hWndInsertAfter = IntPtr.Zero;
-            while (file.Peek() != -1)
-            {
-                var str = file.ReadLine();
-                // Debug.Print(str);
-                string[] dat = str.Split('\t');
-                if (dat.Length > 0)
-                {
-                    int x = int.Parse(dat[3]);
-                    int y = int.Parse(dat[4]);
-                    int w = int.Parse(dat[5]) - x;
-                    int h = int.Parse(dat[6]) - y;
-                    IntPtr hwnd = WinApi._FindWindow(null, dat[2]);
-                    if (hwnd != IntPtr.Zero)
-                    {
-                        var ret = WinApi.SetWindowPos(hwnd, hWndInsertAfter, x, y, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOACTIVATE);
-                        Debug.Print($"{ret} {dat[2]}");
-                        hWndInsertAfter = hwnd;
-                    }
-
-                }
-            }
-
-            file.Close();
             PSWin_Shown(sender, e);
 
         }
@@ -287,7 +256,7 @@ namespace PSWin
                 vrect.bottom = vrect.top + h;
                 wrect = View2WindowRect(vrect, orect);
 
-                var ret = WinApi.SetWindowPos(item.whnd , whnd, wrect.left, wrect.top, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOACTIVATE| WinApi.SWP_NOSIZE);
+                var ret = WinApi.SetWindowPos(item.whnd , WinApi.HWND_TOP, wrect.left, wrect.top, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOACTIVATE| WinApi.SWP_NOSIZE);
                 if (ret == true)
                 {
                     whnd= item.whnd;
@@ -296,6 +265,7 @@ namespace PSWin
                 tx += 50;
                 ty += 50;
             }
+            PSWin_Shown(sender, e);
 
         }
     }
