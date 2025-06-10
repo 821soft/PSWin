@@ -244,6 +244,8 @@ namespace PSWin
             for ( int i=0; i < WinApi._wpd.Count;i++ )
             {
                 WinApi._st_WinPosData item = WinApi._wpd[i];
+                if (this.Handle == item.whnd)
+                { continue;}
                 RECT orect = new RECT();
                 RECT vrect = new RECT();
                 RECT wrect = new RECT();
@@ -256,10 +258,11 @@ namespace PSWin
                 vrect.bottom = vrect.top + h;
                 wrect = View2WindowRect(vrect, orect);
 
-                var ret = WinApi.SetWindowPos(item.whnd , WinApi.HWND_TOP, wrect.left, wrect.top, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOACTIVATE| WinApi.SWP_NOSIZE);
+                var ret = WinApi.SetWindowPos(item.whnd , WinApi.HWND_NOTOPMOST , wrect.left, wrect.top, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOSIZE);
                 if (ret == true)
                 {
-                    whnd= item.whnd;
+                    whnd = item.whnd;
+                    WinApi.SetForegroundWindow(item.whnd);
                 }
 
                 tx += 50;
