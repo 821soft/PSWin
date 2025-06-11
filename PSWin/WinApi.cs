@@ -247,9 +247,6 @@ namespace PSWin
 
             return (IntPtr.Zero);
         }
-        /*
-         * (-11, 0)-(1197, 752) 1208x752
-         */
         public static Boolean _MoveWindows(string title, int x, int y, int w, int h)
         {
             IntPtr hwnd = IntPtr.Zero;
