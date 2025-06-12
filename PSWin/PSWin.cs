@@ -106,7 +106,6 @@ namespace PSWin
                 lb.Size = new Size((vrect.right - vrect.left) / Scale,
                                    (vrect.bottom - vrect.top) / Scale);
 
-
                 lb.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
                 lb.BackColor = Color.White;
                 lb.Tag = i;
@@ -126,7 +125,8 @@ namespace PSWin
                 tip += $"dwExStyle:0x{item._wi.dwExStyle:X8}\n";
                 tip += $"dwWindowStatus:0x{item._wi.dwWindowStatus:X8}\n";
                 tip += $"WindowBorders:({item._wi.cxWindowBorders},{item._wi.cyWindowBorders})\n";
-                TTP_tip1.SetToolTip(lb, tip);
+                //TTP_tip1.SetToolTip(lb, tip);
+                lb.Text = lb.Text + "\n" + tip+ WinApi.Win2ProcName(item.whnd);
                 lb.BringToFront();
             }
         }

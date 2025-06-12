@@ -138,6 +138,8 @@ namespace PSWin
         static extern IntPtr GetDC(IntPtr hwnd);
         [DllImport("User32.dll")]
         static extern void ReleaseDC(IntPtr hwnd, IntPtr dc);
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
 
 
         public static List<_st_WinPosData> _wpd = new List<_st_WinPosData>();
@@ -258,7 +260,6 @@ namespace PSWin
         }
         public static Boolean _DrawRect(Color c, RECT rect)
         {
-
             IntPtr desktopDC = GetDC(IntPtr.Zero);
             using (Graphics g = Graphics.FromHdc(desktopDC))
             {
@@ -305,6 +306,18 @@ namespace PSWin
             rect.right = Vrect.right + Orect.right;
             rect.bottom = Vrect.bottom + Orect.bottom;
             return (rect);
+        }
+        public static string Win2ProcName(IntPtr whnd )
+        {
+            string ret = "";
+            int procID = new int();
+            var er = GetWindowThreadProcessId(whnd, out procID);
+            if (er != 0)
+            {
+                Process pr = Process.GetProcessById(procID);
+                ret = $"{pr.MainModule.ModuleName}";
+            }
+            return (ret);
         }
 
     }
