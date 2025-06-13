@@ -35,6 +35,16 @@ namespace PSWin
             }
             System.Windows.Forms.Label lb = (System.Windows.Forms.Label)sender;
             lb.BackColor = Color.Yellow;
+            int i = (int)lb.Tag;
+            WinApi._st_WinPosData item = WinApi._wpd[i];
+            WinApi.SetForegroundWindow(item.whnd);
+            //            WinApi.SetWindowPos(item.whnd, WinApi.HWND_NOTOPMOST, 0, 0, 0, 0,  WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOSIZE | WinApi.SWP_NOMOVE);
+            this.Activate();
+
+            lb.BringToFront();
+//            PSWin_Shown(sender, e);
+
+
         }
         private void Lb_DoubleClick(object? sender, EventArgs e)
         {
@@ -233,7 +243,9 @@ namespace PSWin
 
         private void PSWin_Activated(object sender, EventArgs e)
         {
-            PSWin_Shown(sender, e);
+            var a = e.ToString();
+            Debug.Print($"{a}");
+            //PSWin_Shown(sender, e);
         }
 
         private void Mnu_Tile_Click(object sender, EventArgs e)
