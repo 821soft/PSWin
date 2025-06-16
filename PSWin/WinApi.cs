@@ -101,6 +101,7 @@ namespace PSWin
             public IntPtr whnd;
             public uint dwstyle;
             public string title;
+            public string module;
             public int x;
             public int y;
             public int cx;
@@ -231,6 +232,7 @@ namespace PSWin
                         WinApi.GetWindowText(w, tsb, tsb.Capacity);
                         wpd_rec.title = tsb.ToString();
                         wpd_rec._wi = _wi;
+                        wpd_rec.module = Win2ProcName(wpd_rec.whnd);
                         _wpd.Add(wpd_rec);
                     }
                 }

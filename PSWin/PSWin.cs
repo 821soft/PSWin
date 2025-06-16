@@ -136,7 +136,7 @@ namespace PSWin
                 tip += $"dwWindowStatus:0x{item._wi.dwWindowStatus:X8}\n";
                 tip += $"WindowBorders:({item._wi.cxWindowBorders},{item._wi.cyWindowBorders})\n";
                 //TTP_tip1.SetToolTip(lb, tip);
-                lb.Text = lb.Text + "\n" + tip+ WinApi.Win2ProcName(item.whnd);
+                lb.Text = lb.Text + "\n" + tip+ item.module;
                 lb.BringToFront();
             }
         }
@@ -243,8 +243,6 @@ namespace PSWin
 
         private void PSWin_Activated(object sender, EventArgs e)
         {
-            var a = e.ToString();
-            Debug.Print($"{a}");
             //PSWin_Shown(sender, e);
         }
 
