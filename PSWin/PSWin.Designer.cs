@@ -39,12 +39,12 @@
             Mnu_Scale25 = new ToolStripMenuItem();
             Mnu_Scale50 = new ToolStripMenuItem();
             Mnu_Refresh = new ToolStripMenuItem();
+            MNU_Align = new ToolStripMenuItem();
+            Mnu_Tile = new ToolStripMenuItem();
             panel1 = new Panel();
             saveFileDialog1 = new SaveFileDialog();
             openFileDialog1 = new OpenFileDialog();
             TTP_tip1 = new ToolTip(components);
-            MNU_Align = new ToolStripMenuItem();
-            Mnu_Tile = new ToolStripMenuItem();
             MnuBar1.SuspendLayout();
             SuspendLayout();
             // 
@@ -120,6 +120,21 @@
             Mnu_Refresh.Text = "Refresh";
             Mnu_Refresh.Click += Mnu_Refresh_Click;
             // 
+            // MNU_Align
+            // 
+            MNU_Align.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Tile });
+            MNU_Align.Name = "MNU_Align";
+            MNU_Align.Size = new Size(47, 20);
+            MNU_Align.Text = "Align";
+            MNU_Align.DropDownOpening += MNU_Align_DropDownOpening;
+            // 
+            // Mnu_Tile
+            // 
+            Mnu_Tile.Name = "Mnu_Tile";
+            Mnu_Tile.Size = new Size(180, 22);
+            Mnu_Tile.Text = "Tile";
+            Mnu_Tile.Click += Mnu_Tile_Click;
+            // 
             // panel1
             // 
             panel1.BackColor = Color.Black;
@@ -143,20 +158,6 @@
             openFileDialog1.FileName = "pswin.psw";
             openFileDialog1.Filter = "pswデータ|*.psw|すべて|*.*";
             openFileDialog1.Title = "開く";
-            // 
-            // MNU_Align
-            // 
-            MNU_Align.DropDownItems.AddRange(new ToolStripItem[] { Mnu_Tile });
-            MNU_Align.Name = "MNU_Align";
-            MNU_Align.Size = new Size(47, 20);
-            MNU_Align.Text = "Align";
-            // 
-            // Mnu_Tile
-            // 
-            Mnu_Tile.Name = "Mnu_Tile";
-            Mnu_Tile.Size = new Size(180, 22);
-            Mnu_Tile.Text = "Tile";
-            Mnu_Tile.Click += Mnu_Tile_Click;
             // 
             // PSWin
             // 

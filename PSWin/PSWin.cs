@@ -42,7 +42,7 @@ namespace PSWin
             this.Activate();
 
             lb.BringToFront();
-//            PSWin_Shown(sender, e);
+            //            PSWin_Shown(sender, e);
 
 
         }
@@ -106,7 +106,7 @@ namespace PSWin
                 //WinApi._DrawRect(Color.Blue, item._wi.rcClient);
                 RECT vrect = new RECT();
                 RECT orect = new RECT();
-                vrect = ViewRect(item._wi,ref orect);
+                vrect = ViewRect(item._wi, ref orect);
                 // WinApi._DrawRect(Color.Yellow, vrect);
 
                 System.Windows.Forms.Label lb = new System.Windows.Forms.Label();
@@ -136,7 +136,7 @@ namespace PSWin
                 tip += $"dwWindowStatus:0x{item._wi.dwWindowStatus:X8}\n";
                 tip += $"WindowBorders:({item._wi.cxWindowBorders},{item._wi.cyWindowBorders})\n";
                 //TTP_tip1.SetToolTip(lb, tip);
-                lb.Text = lb.Text + "\n" + tip+ item.module;
+                lb.Text = lb.Text + "\n" + tip + item.module;
                 lb.BringToFront();
             }
         }
@@ -235,7 +235,7 @@ namespace PSWin
             string path = openFileDialog1.FileName;
             Debug.Print($"Load {path}");
 
-            Program.LoadSet( path );
+            Program.LoadSet(path);
 
             PSWin_Shown(sender, e);
 
@@ -251,7 +251,7 @@ namespace PSWin
             int tx = 0;
             int ty = 0;
             IntPtr whnd = IntPtr.Zero;
-            for ( int i=0; i < WinApi._wpd.Count;i++ )
+            for (int i = 0; i < WinApi._wpd.Count; i++)
             {
                 WinApi._st_WinPosData item = WinApi._wpd[i];
                 if (this.Handle != item.whnd)
@@ -268,7 +268,7 @@ namespace PSWin
                     vrect.bottom = vrect.top + h;
                     wrect = View2WindowRect(vrect, orect);
 
-                    var ret = WinApi.SetWindowPos(item.whnd , WinApi.HWND_NOTOPMOST , wrect.left, wrect.top, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOSIZE);
+                    var ret = WinApi.SetWindowPos(item.whnd, WinApi.HWND_NOTOPMOST, wrect.left, wrect.top, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOSIZE);
 
                     if (ret == true)
                     {
@@ -282,6 +282,17 @@ namespace PSWin
             }
             PSWin_Shown(sender, e);
 
+        }
+
+        private void MNU_Align_DropDownOpening(object sender, EventArgs e)
+        {
+            MNU_Align.DropDownItems.Clear();
+
+            // メニューアイテムを生成
+            foreach (var item in WinApi._wpd)
+            {
+                MNU_Align.DropDownItems.Add(item.module);
+            }
         }
     }
 }
