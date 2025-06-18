@@ -283,16 +283,53 @@ namespace PSWin
             PSWin_Shown(sender, e);
 
         }
+        private struct ModList
+        {
+            public string mname;
+            public int cnt;
+        }
+        List <ModList> modLists = new List <ModList>();
 
         private void MNU_Align_DropDownOpening(object sender, EventArgs e)
         {
-            MNU_Align.DropDownItems.Clear();
 
-            // メニューアイテムを生成
+            /*
+             * 実行モジュール名でグループ化
+             */
+            Mnu_Tile.DropDownItems.Clear();
+
+            /*
+             * Align +
+             *  Tile
+             *   all
+             *    ２つ以上
+             */
+
+            Mnu_Tile.DropDownItems.Add("All");
+            modLists.Clear();
+
+            /*
+             *  対象となるモジュールリスト抽出
+             */
             foreach (var item in WinApi._wpd)
             {
-                MNU_Align.DropDownItems.Add(item.module);
+                var idx = modLists.FindIndex(mname => mname.Equals(item.module));
+                if (  idx == -1 )
+                {
+                    ModList item_m = new ModList();
+                    item_m.mname = item.module;
+                    item_m.cnt = 1;
+                    modLists.Add(item_m);
+                }
+                else 
+                {
+                    var item_m = modLists[idx];
+                    item_m.cnt++;
+                }
             }
+
+
+
         }
     }
 }
