@@ -283,12 +283,12 @@ namespace PSWin
             PSWin_Shown(sender, e);
 
         }
-        private struct ModList
+        public struct ModList
         {
-            public string mname;
+            public string modname;
             public int cnt;
         }
-        List <ModList> modLists = new List <ModList>();
+        public List<ModList> modLists = [];
 
         private void MNU_Align_DropDownOpening(object sender, EventArgs e)
         {
@@ -313,23 +313,33 @@ namespace PSWin
              */
             foreach (var item in WinApi._wpd)
             {
-                var idx = modLists.FindIndex(mname => mname.Equals(item.module));
+                var idx = modLists.FindIndex(x => x.modname == item.module );
                 if (  idx == -1 )
                 {
                     ModList item_m = new ModList();
-                    item_m.mname = item.module;
+                    item_m.modname = item.module;
                     item_m.cnt = 1;
                     modLists.Add(item_m);
                 }
                 else 
                 {
-                    var item_m = modLists[idx];
-                    item_m.cnt++;
+                    var m = modLists[idx];
+                    m.cnt++;
+                    modLists.RemoveAt(idx);
+                    modLists.Add(m);
+                    
+                    Debug.Print($"{m.modname} {m.cnt}");
                 }
             }
 
-
-
+            foreach (var mitem in modLists)
+            {
+                Debug.Print($"{mitem.modname} {mitem.cnt}");
+                if (mitem.cnt > 1)
+                {
+                    Mnu_Tile.DropDownItems.Add(mitem.modname);
+                }
+            }
         }
     }
 }
