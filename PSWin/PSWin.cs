@@ -283,6 +283,7 @@ namespace PSWin
             PSWin_Shown(sender, e);
 
         }
+
         public struct ModList
         {
             public string modname;
@@ -305,7 +306,9 @@ namespace PSWin
              *    ‚Q‚ÂˆÈã
              */
 
-            Mnu_Tile.DropDownItems.Add("All");
+            var ma = Mnu_Tile.DropDownItems.Add("All");
+            ma.Click += Mnu_Tile_Click;
+
             modLists.Clear();
 
             /*
@@ -337,9 +340,54 @@ namespace PSWin
                 Debug.Print($"{mitem.modname} {mitem.cnt}");
                 if (mitem.cnt > 1)
                 {
-                    Mnu_Tile.DropDownItems.Add(mitem.modname);
+                    var mn = Mnu_Tile.DropDownItems.Add(mitem.modname);
+                    mn.Click += Mnu_ModuleTile_Click;
                 }
             }
         }
+
+        private void Mnu_ModuleTile_Click(object ? sender, EventArgs e)
+        {
+            int tx = 0;
+            int ty = 0;
+            IntPtr whnd = IntPtr.Zero;
+            for (int i = 0; i < WinApi._wpd.Count; i++)
+            {
+                WinApi._st_WinPosData item = WinApi._wpd[i];
+                var mn = (ToolStripItem)(sender);
+                if (item.module != mn.Text)
+                {
+                    continue;
+                }
+                if (this.Handle != item.whnd)
+                {
+                    RECT orect = new RECT();
+                    RECT vrect = new RECT();
+                    RECT wrect = new RECT();
+                    vrect = ViewRect(item._wi, ref orect);
+                    int w = vrect.right - vrect.left;
+                    int h = vrect.bottom - vrect.top;
+                    vrect.left = tx;
+                    vrect.top = ty;
+                    vrect.right = vrect.left + w;
+                    vrect.bottom = vrect.top + h;
+                    wrect = View2WindowRect(vrect, orect);
+
+                    var ret = WinApi.SetWindowPos(item.whnd, WinApi.HWND_NOTOPMOST, wrect.left, wrect.top, w, h, WinApi.SWP_SHOWWINDOW | WinApi.SWP_NOSIZE);
+
+                    if (ret == true)
+                    {
+                        whnd = item.whnd;
+                        WinApi.SetForegroundWindow(item.whnd);
+                        Debug.Print($"{i} {item.title},{tx},{ty}");
+                        tx += 50;
+                        ty += 50;
+                    }
+                }
+            }
+            PSWin_Shown(sender, e);
+
+        }
+
     }
 }
